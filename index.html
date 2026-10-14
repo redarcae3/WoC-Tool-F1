@@ -62,7 +62,7 @@ button:hover{border-color:var(--red)}
 .c.w{width:520px}
 .bgi{position:absolute;left:0;right:0;top:0;bottom:0;background-size:cover;background-position:center;opacity:.28}
 .hd{position:relative;overflow:hidden;padding:20px 18px 18px;background:linear-gradient(120deg,#ff1a00,#c20000);min-height:136px}
-.zz{position:absolute;right:-4px;top:-18px;height:210px;width:106px}
+.zz{position:absolute;right:-4px;top:-18px;height:210px;width:106px;display:block}
 .kick{position:relative;display:flex;align-items:center;gap:8px;margin-bottom:12px}
 .kick img{width:28px;height:28px;border-radius:6px;border:2px solid #000}
 .kick span{font:700 10px 'Golos Text';color:#000}
@@ -146,7 +146,9 @@ const sorted=a=>[...a].sort((x,y)=>(Number(y.pts)||0)-(Number(x.pts)||0)||(x.bes
 const num=v=>v===''||v==null?'':Number(v);
 function loadImg(f,max,type,cb){const rd=new FileReader();rd.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);cb(c.toDataURL(type,.88))};im.src=rd.result};rd.readAsDataURL(f)}
 /* ---------- карточки ---------- */
-const ZZ='<svg class="zz" viewBox="170 0 300 640" preserveAspectRatio="xMidYMid slice"><path d="M409 -50V285Q409 318 380 320L275 328Q233 332 233 380V700" fill="none" stroke="#000" stroke-width="100"/></svg>';
+const ZZ=(()=>{const W=424,H=840,k=W/300,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+ x.setTransform(k,0,0,k,-170*k,(H-640*k)/2);x.beginPath();x.moveTo(409,-50);x.lineTo(409,285);x.quadraticCurveTo(409,318,380,320);x.lineTo(275,328);x.quadraticCurveTo(233,332,233,380);x.lineTo(233,700);
+ x.lineWidth=100;x.strokeStyle='#000';x.stroke();return `<img class="zz" alt="" src="${c.toDataURL('image/png')}">`})();
 const shell=(t,body,foot,o={})=>`<div class="c ${o.w?'w':''}">${o.bg?`<div class="bgi" style="background-image:url(${o.bg})"></div>`:''}<div class="hd">${ZZ}<div class="kick"><img src="${LOGO}" alt=""><span>WALL OF CHAMPIONS</span></div><h1>${esc(t)}</h1><div class="sub">${esc(S.event)}</div></div><div class="bd">${body}</div><div class="ft"><b>■</b>${esc(foot)}</div></div>`;
 const rowH=o=>`<div class="rw ${o.top?'t1':''}" style="--tc:${o.c}"><div class="rk">${esc(o.rk)}</div><div style="min-width:0"><div class="nm">${esc(o.nm)}</div>${o.tn?`<div class="tn">${esc(o.tn)}</div>`:''}</div><div><div class="pt ${o.pl?'pl':''}">${o.pl?'+':''}${esc(o.pt)}</div>${o.gp?`<div class="gp">${o.gp}</div>`:''}</div></div>`;
 const CFG={race:{n:10,t:'Результаты Гонки',f:'Гонка • ТОП-10'},sprint:{n:8,t:'Результаты Спринта',f:'Спринт • ТОП-8'}};
