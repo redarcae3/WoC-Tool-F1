@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wall of Champions — Studio</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Exo+2:wght@600;700;800&family=Roboto+Mono:wght@500;700&family=Golos+Text:wght@400;600;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+:root{--bg:#09090a;--pn:#131316;--ln:#26262b;--tx:#f4f4f5;--mu:#8d8d97;--red:#ff1a00;--in:#0c0c0e;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#efeff1;--pn:#fff;--ln:#d9d9df;--tx:#111;--mu:#666;--in:#f6f6f8;color-scheme:light}}
+:root[data-theme="light"]{--bg:#efeff1;--pn:#fff;--ln:#d9d9df;--tx:#111;--mu:#666;--in:#f6f6f8;color-scheme:light}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{background:var(--bg);color:var(--tx);font:15px/1.4 "Golos Text",system-ui,sans-serif;padding-bottom:calc(88px + env(safe-area-inset-bottom,0px))}
+.top{display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--ln)}
+.top img{width:48px;height:48px;border-radius:10px}
+.top b{display:block;font:700 22px/1 'Exo 2',sans-serif;letter-spacing:.08em}
+.top span{font-size:11px;letter-spacing:.3em;color:var(--red);font-weight:700}
+.app{display:grid;grid-template-columns:190px minmax(0,1fr) minmax(0,540px);gap:20px;padding:20px;max-width:1440px;margin:0 auto}
+@media (max-width:1180px){.app{grid-template-columns:minmax(0,1fr) minmax(0,500px)}#tabs{grid-column:1/-1;flex-direction:row!important;overflow-x:auto}}
+@media (max-width:900px){.app{grid-template-columns:1fr;padding:12px}}
+#tabs{display:flex;flex-direction:column;gap:4px;align-self:start;position:sticky;top:12px}
+#tabs button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-left:3px solid transparent;border-radius:0 8px 8px 0;background:transparent;color:var(--mu);padding:11px 12px;font:600 14px "Golos Text";flex:none;cursor:pointer}
+#tabs button i{font:700 11px "Roboto Mono";font-style:normal;opacity:.6}
+#tabs button[aria-selected=true]{background:var(--pn);color:var(--tx);border-left-color:var(--red)}
+.ed{background:var(--pn);border:1px solid var(--ln);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0;align-self:start}
+.ed h2{font:600 18px 'Exo 2',sans-serif;letter-spacing:.06em;text-transform:uppercase;margin-top:10px;display:flex;align-items:center;gap:8px}
+.ed h2::before{content:"";width:4px;height:18px;background:var(--red);border-radius:2px}
+.hint{font-size:12px;color:var(--mu)}
+label{display:flex;flex-direction:column;gap:5px;font-weight:600;font-size:12px;color:var(--mu);letter-spacing:.04em}
+input,select{font:inherit;font-size:14px;color:var(--tx);background:var(--in);border:1px solid var(--ln);padding:10px;border-radius:8px;width:100%;min-width:0}
+input[type=color]{padding:2px;height:40px;width:48px}
+input[type=file]{padding:7px;font-size:12px}
+button{font:600 14px "Golos Text";cursor:pointer;border:1px solid var(--ln);background:var(--in);color:var(--tx);padding:10px 14px;border-radius:8px}
+button:hover{border-color:var(--red)}
+:focus-visible{outline:2px solid var(--red);outline-offset:1px}
+.r{display:grid;gap:6px;align-items:center}
+.r .n{font:700 13px "Roboto Mono";color:var(--mu);text-align:center}
+.r .t{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.r.race{grid-template-columns:26px minmax(0,1fr) 64px}
+.r.grid{grid-template-columns:64px minmax(0,1fr) 40px}
+.r.drv{grid-template-columns:minmax(0,1fr) 70px 70px}
+.r.base{grid-template-columns:48px minmax(0,1fr) 54px minmax(0,1fr) 40px}
+.r.tm{grid-template-columns:minmax(0,1fr) 48px 40px}
+.r.sc{grid-template-columns:repeat(6,1fr)}.r.sc>:nth-child(1){grid-column:span 3}.r.sc>:nth-child(2){grid-column:span 3}.r.sc>:nth-child(3){grid-column:span 5}
+.bar{display:flex;gap:8px;flex-wrap:wrap}
+.pv{position:sticky;top:12px;align-self:start}
+@media (max-width:900px){.pv{position:static}}
+.stage{display:flex;justify-content:center;padding:22px 14px;border-radius:16px;border:1px solid var(--ln);background:radial-gradient(circle at 50% 0,rgba(255,26,0,.16),transparent 60%),#0d0d0f}
+.stage+small{display:block;text-align:center;margin-top:8px;color:var(--mu);font-size:12px}
+.gen{position:fixed;left:0;right:0;bottom:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));background:var(--bg);border-top:1px solid var(--ln);display:flex;gap:12px;align-items:center;justify-content:center;z-index:50}
+.gen button{background:var(--red);border-color:var(--red);color:#fff;font:700 17px 'Exo 2',sans-serif;letter-spacing:.14em;padding:13px 22px;flex:1;max-width:520px}
+.toast{font-size:13px;color:var(--mu);min-width:0}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:99;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:20px}
+.modal.on{display:flex}
+.modal img{max-width:95%;max-height:72vh;border-radius:14px;object-fit:contain}
+.modal p{color:#aab;font-size:13px;text-align:center}
+.modal .bar button{background:#2a2a2e;color:#fff}.modal .bar .main{background:var(--red);border-color:var(--red)}
+/* ===== КАРТИНКИ ===== */
+.c{width:440px;max-width:100%;position:relative;overflow:hidden;border-radius:22px;color:#fff;font-family:'Golos Text',sans-serif;background:radial-gradient(circle at 100% 100%,rgba(255,0,0,.22),transparent 50%),linear-gradient(180deg,#0f0f11,#070708);border:1px solid #232327}
+.c.w{width:520px}
+.bgi{position:absolute;left:0;right:0;top:0;bottom:0;background-size:cover;background-position:center;opacity:.28}
+.hd{position:relative;overflow:hidden;padding:20px 18px 18px;background:linear-gradient(120deg,#ff1a00,#c20000);min-height:136px}
+.zz{position:absolute;right:-4px;top:-18px;height:210px;width:106px}
+.kick{position:relative;display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.kick img{width:28px;height:28px;border-radius:6px;border:2px solid #000}
+.kick span{font:700 10px 'Golos Text';color:#000}
+.hd h1{position:relative;font:800 29px/1.08 'Exo 2',sans-serif;text-transform:uppercase;max-width:300px;}
+.sub{position:relative;margin-top:10px;font:700 12px 'Golos Text';text-transform:uppercase;color:#fff}
+.bd{position:relative;padding:16px 14px 4px}
+.ft{position:relative;margin:10px 14px 0;padding:12px 2px 16px;border-top:1px solid #26262a;font:600 10px 'Golos Text';text-transform:uppercase;color:#7b7b85}
+.ft b{color:#ff2a1a;margin-right:8px}
+.rw{display:grid;grid-template-columns:32px 1fr auto;gap:10px;align-items:center;padding:7px 12px 7px 14px;margin-bottom:6px;border-radius:9px;background:#141417;position:relative;overflow:hidden}
+.rw::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--tc,#ff1a00)}
+.rw.t1{background:linear-gradient(90deg,rgba(255,20,0,.38),#141417 75%)}
+.rk{width:30px;height:30px;border-radius:7px;background:#25252a;font:800 15px 'Exo 2',sans-serif;display:flex;align-items:center;justify-content:center}
+.t1 .rk{background:#ff1a00}
+.nm{font:700 15px/1.2 'Exo 2',sans-serif;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tn{font:600 9px 'Golos Text';text-transform:uppercase;color:#85858f;margin-top:3px;white-space:nowrap}
+.pt{text-align:right;font:700 16px 'Roboto Mono',monospace}
+.pt.pl{color:#ff4b3a}
+.gp{text-align:right;font:500 9px 'Roboto Mono',monospace;color:#6f6f78;margin-top:2px}
+.pod{display:flex;align-items:flex-end;gap:8px;margin-bottom:14px}
+.pc{flex:1;position:relative;overflow:hidden;border-radius:12px;background-color:#121214;background-size:cover;background-position:center top;background-repeat:no-repeat;border:1px solid #2b2b30}
+.pc.p1{height:240px;border:2px solid #ff1a00;box-shadow:0 0 24px rgba(255,26,0,.45)}.pc.p2{height:208px}.pc.p3{height:184px}
+.pn{position:absolute;top:8px;left:8px;width:28px;height:28px;border-radius:7px;background:#ff1a00;font:800 15px 'Exo 2',sans-serif;display:flex;align-items:center;justify-content:center;z-index:3}
+.ph{position:absolute;left:0;right:0;top:0;bottom:0;background-size:cover;background-position:center top;background-repeat:no-repeat;z-index:1}.bign{z-index:0;position:absolute;left:0;right:0;top:40px;text-align:center;font:800 76px/1 'Exo 2',sans-serif;color:rgba(255,255,255,.13)}
+.pi{position:absolute;left:0;right:0;bottom:0;padding:8px 6px 9px;background:rgba(0,0,0,.84);text-align:center;z-index:2}
+.p1 .pi{background:#ff1a00}
+.pi .nm{font-size:13px}.pi .pt{text-align:center;font-size:13px;margin-top:3px}.pi .tn{margin-top:2px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:8px}.col.sh{padding-top:24px}
+.gc{display:grid;grid-template-columns:26px 20px 1fr;gap:7px;align-items:center;height:42px;padding:0 8px 0 11px;border-radius:8px;background:#141417;position:relative;overflow:hidden;margin-bottom:7px}
+.gc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--tc,#ff1a00)}
+.gt{width:26px;height:26px;border-radius:6px;background:#fff;color:#000;font:800 13px 'Exo 2',sans-serif;display:flex;align-items:center;justify-content:center}
+.gc.pole .gt{background:#ffc400}.gc.pit .gt{background:#2a2a2e;color:#ffaa00;font-size:11px}
+.gn{font:700 10px 'Roboto Mono',monospace;color:#85858f;text-align:center}
+.gc .nm{font-size:13px}.gc .tn{font-size:8px;margin-top:2px}
+.pith{margin:12px 0 8px;font:700 10px 'Golos Text';color:#ffaa00;text-transform:uppercase}
+.tp{margin-bottom:14px;padding:12px;border-radius:12px;text-align:center;background:radial-gradient(circle at 50% 50%,rgba(255,26,0,.3),rgba(255,255,255,.03) 72%);border:1px solid #2b2b30}
+.tp img{max-width:92%;max-height:160px;object-fit:contain}
+.ss{display:grid;grid-template-columns:58px 1fr auto;gap:12px;align-items:center;margin-bottom:8px;padding:8px 12px 8px 8px;border-radius:10px;background:#141417}
+.dt{height:46px;border-radius:8px;background:#25252a;text-align:center;padding-top:5px}
+.dt b{display:block;font:800 20px/1 'Exo 2',sans-serif}.dt i{display:block;font:600 9px 'Golos Text';font-style:normal;color:#aaa;margin-top:3px}
+.ss.hot{background:linear-gradient(90deg,rgba(255,20,0,.35),#141417 75%)}.hot .dt{background:#ff1a00}.hot .dt i{color:#fff}
+.ss .nm{font-size:16px}
+.tr{text-align:right;padding-left:12px;border-left:1px solid #2e2e33;white-space:nowrap}.tb{font:700 19px 'Roboto Mono',monospace}.tb.s{font-size:13px}.te{font:500 12px 'Roboto Mono',monospace;color:#85858f;margin-top:2px}
+</style>
+</head>
+<body>
+<div class="top"><img id="hl" alt="Логотип" width="48" height="48"><div><b>WALL OF CHAMPIONS</b><span>STUDIO</span></div></div>
+<div class="app">
+<nav id="tabs" role="tablist" aria-label="Разделы"></nav>
+<section class="ed" id="ed" aria-label="Данные"></section>
+<section class="pv" aria-label="Предпросмотр"><div class="stage"><div id="card"></div></div><small>Так будет выглядеть картинка</small></section>
+</div>
+<div class="gen"><button id="gen">СГЕНЕРИРОВАТЬ КАРТИНКУ</button><div class="toast" id="toast" role="status"></div></div>
+<div class="modal" id="modal"><img id="out" alt="Готовая картинка"><p>Зажмите картинку пальцем, чтобы сохранить в галерею</p><div class="bar"><button class="main" id="save">Сохранить файл</button><button id="close">Закрыть</button></div></div>
+<script>
+const LOGO='logo.png';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const NB='\u00A0',KEY='woc-studio-v1';
+function h(t,p={},...c){const e=document.createElement(t);for(const k in p){if(k==='on')for(const v in p.on)e.addEventListener(v,p.on[v]);else if(k in e)e[k]=p[k];else e.setAttribute(k,p[k])}e.append(...c.flat().filter(x=>x!=null));return e}
+const D=(i,s,t,n,p,b)=>({id:s.toLowerCase(),ini:i,sur:s,team:t,no:n,pts:p,best:b});
+const rs=a=>a.map(([d,p])=>({d,p}));
+const DEF=()=>({
+ event:'Гран-при Сингапура',tab:'race',poleLeft:false,
+ teams:[['Mercedes','#27F4D2',578,1],['Ferrari','#E80020',444,1],['McLaren','#FF8000',339,1],['Red Bull','#3671C6',332,1],['Racing Bulls','#6692FF',100,4],['Alpine','#0093CC',68,5],['Haas','#B6BABD',30,7],['Audi','#F50500',23,8],['Williams','#64C4FF',12,8],['Aston Martin','#229971',7,10],['Cadillac','#C0C0C0',0,11]].map(([n,c,p,b])=>({n,c,pts:p,best:b})),
+ drivers:[D('L.','Norris','McLaren',1,201,1),D('C.','Leclerc','Ferrari',16,215,1),D('O.','Piastri','McLaren',81,138,1),D('M.','Verstappen','Red Bull',3,221,2),D('L.','Hamilton','Ferrari',44,229,2),D('G.','Russell','Mercedes',63,238,1),D('K.','Antonelli','Mercedes',12,340,1),D('I.','Hadjar','Red Bull',6,97,3),D('A.','Lindblad','Racing Bulls',41,38,6),D('N.','Hulkenberg','Audi',27,13,1),D('L.','Lawson','Racing Bulls',30,75,6),D('P.','Gasly','Alpine',10,41,3),D('F.','Colapinto','Alpine',43,27,7),D('G.','Bortoleto','Audi',5,10,8),D('E.','Ocon','Haas',31,7,2),D('F.','Alonso','Aston Martin',14,7,3),D('O.','Bearman','Haas',87,23,7),D('C.','Sainz','Williams',55,7,4),D('A.','Albon','Williams',23,5,9),D('L.','Stroll','Aston Martin',18,0,1),D('S.','Perez','Cadillac',11,0,15),D('V.','Bottas','Cadillac',77,0,14),D('Y.','Tsunoda','Racing Bulls','',1,11)],
+ race:rs([['verstappen',25],['leclerc',18],['antonelli',15],['norris',12],['piastri',10],['hamilton',8],['lawson',6],['hulkenberg',4],['russell',2],['hadjar',1]]),
+ sprint:rs([['verstappen',8],['hamilton',7],['leclerc',6],['antonelli',5],['lawson',4],['bearman',3],['hulkenberg',2],['norris',1]]),
+ grid:[['1','verstappen'],['2','leclerc'],['3','hamilton'],['4','antonelli'],['5','norris'],['6','piastri'],['7','gasly'],['8','lawson'],['9','lindblad'],['10','hulkenberg'],['11','bearman'],['12','ocon'],['13','sainz'],['14','bortoleto'],['15','colapinto'],['16','albon'],['17','perez'],['18','bottas'],['19','russell'],['PL1','alonso'],['PL2','stroll'],['PL3','hadjar']].map(([pos,d])=>({pos,d})),
+ sched:{note:'Время МСК',rows:[['2026-10-09','Практика','11:30 – 12:30'],['2026-10-09','Спринт-квал','15:30 – 16:15'],['2026-10-10','Спринт','12:00 – 13:00'],['2026-10-10','Квалификация','16:00 – 17:00'],['2026-10-11','Гонка','15:00 – 17:00']].map(([date,name,time])=>({date,name,time}))},
+ undo:null});
+let S=DEF();
+try{const v=JSON.parse(localStorage.getItem(KEY)||'null');if(v&&v.drivers&&v.teams)S=Object.assign(S,v)}catch(e){}
+if(!TABSKEYS().includes(S.tab))S.tab='race';
+function TABSKEYS(){return['race','sprint','grid','sched','drivers','teams','base']}
+const IMG={};['track','bg'].forEach(k=>{try{IMG[k]=localStorage.getItem('woc-img-'+k)||''}catch(e){IMG[k]=''}});
+function setImg(k,v){IMG[k]=v;try{v?localStorage.setItem('woc-img-'+k,v):localStorage.removeItem('woc-img-'+k)}catch(e){toast('Картинка велика для запоминания — она будет жить, пока открыта страница')}}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const drv=id=>S.drivers.find(d=>d.id===id);
+const tcol=n=>(S.teams.find(t=>t.n===n)||{}).c||'#555555';
+const sorted=a=>[...a].sort((x,y)=>(Number(y.pts)||0)-(Number(x.pts)||0)||(x.best||99)-(y.best||99));
+const num=v=>v===''||v==null?'':Number(v);
+function loadImg(f,max,type,cb){const rd=new FileReader();rd.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);cb(c.toDataURL(type,.88))};im.src=rd.result};rd.readAsDataURL(f)}
+/* ---------- карточки ---------- */
+const ZZ='<svg class="zz" viewBox="170 0 300 640" preserveAspectRatio="xMidYMid slice"><path d="M409 -50V285Q409 318 380 320L275 328Q233 332 233 380V700" fill="none" stroke="#000" stroke-width="100"/></svg>';
+const shell=(t,body,foot,o={})=>`<div class="c ${o.w?'w':''}">${o.bg?`<div class="bgi" style="background-image:url(${o.bg})"></div>`:''}<div class="hd">${ZZ}<div class="kick"><img src="${LOGO}" alt=""><span>WALL OF CHAMPIONS</span></div><h1>${esc(t)}</h1><div class="sub">${esc(S.event)}</div></div><div class="bd">${body}</div><div class="ft"><b>■</b>${esc(foot)}</div></div>`;
+const rowH=o=>`<div class="rw ${o.top?'t1':''}" style="--tc:${o.c}"><div class="rk">${esc(o.rk)}</div><div style="min-width:0"><div class="nm">${esc(o.nm)}</div>${o.tn?`<div class="tn">${esc(o.tn)}</div>`:''}</div><div><div class="pt ${o.pl?'pl':''}">${o.pl?'+':''}${esc(o.pt)}</div>${o.gp?`<div class="gp">${o.gp}</div>`:''}</div></div>`;
+const CFG={race:{n:10,t:'Результаты Гонки',f:'Гонка • ТОП-10'},sprint:{n:8,t:'Результаты Спринта',f:'Спринт • ТОП-8'}};
+function cardRes(k){
+ const c=CFG[k],L=S[k].map((r,i)=>({d:drv(r.d),p:r.p,i}));
+ const pod=(i,cl)=>{const r=L[i];if(!r||!r.d)return `<div class="pc ${cl}"><div class="pn">${i+1}</div></div>`;
+  const ph=IMG['p'+k+i],tc=tcol(r.d.team),bg=`linear-gradient(180deg,${tc}99,#121214)`;
+  return `<div class="pc ${cl}" style="background-image:${bg}"><div class="pn">${i+1}</div><div class="bign">${esc(r.d.no)}</div>${ph?`<div class="ph" style="background-image:url(${ph})"></div>`:''}<div class="pi"><div class="nm">${esc(r.d.sur)}</div><div class="tn" ${cl==='p1'?'':`style="color:${tc}"`}>${esc(r.d.team)}</div><div class="pt">+${esc(r.p)}</div></div></div>`};
+ const rows=L.slice(3).filter(r=>r.d).map(r=>rowH({rk:r.i+1,nm:r.d.sur,tn:r.d.team,c:tcol(r.d.team),pt:r.p,pl:1})).join('');
+ return shell(c.t,`<div class="pod">${pod(1,'p2')}${pod(0,'p1')}${pod(2,'p3')}</div>${rows}`,c.f)}
+function cardStand(kind){
+ const dd=kind==='d',a=sorted(dd?S.drivers:S.teams),lead=Number(a[0]&&a[0].pts)||0;
+ const rows=a.map((x,i)=>rowH({rk:i+1,nm:dd?x.sur:x.n,tn:dd?x.team:'',c:dd?tcol(x.team):x.c,pt:x.pts,top:i===0,gp:i?'−'+(lead-(Number(x.pts)||0)):''})).join('');
+ return shell(dd?'Личный Зачёт':'Кубок конструкторов',rows,'Положение после этапа')}
+function cardGrid(){
+ const R=S.grid.map(g=>({pos:String(g.pos).trim(),d:drv(g.d)})).filter(g=>g.d&&g.pos);
+ const pl=g=>/pl/i.test(g.pos),n=g=>parseInt(g.pos.replace(/\D/g,''))||999;
+ const main=R.filter(g=>!pl(g)).sort((a,b)=>n(a)-n(b)),pit=R.filter(pl).sort((a,b)=>n(a)-n(b));
+ const cell=g=>{const d=g.d,P=pl(g);return `<div class="gc ${!P&&n(g)===1?'pole':P?'pit':''}" style="--tc:${tcol(d.team)}"><div class="gt">${P?'PL':esc(g.pos)}</div><div class="gn">${esc(d.no)}</div><div style="min-width:0"><div class="nm">${esc(d.ini+NB+d.sur)}</div><div class="tn">${esc(d.team)}</div></div></div>`};
+ let l='',r='';main.forEach(g=>{const odd=n(g)%2!==0;if(S.poleLeft?odd:!odd)l+=cell(g);else r+=cell(g)});
+ return shell('Стартовая Решётка',`<div class="cols"><div class="col ${S.poleLeft?'':'sh'}">${l}</div><div class="col ${S.poleLeft?'sh':''}">${r}</div></div>${pit.length?`<div class="pith">Pit-Lane Start</div>${pit.map(cell).join('')}`:''}`,'Стартовая решётка',{w:1})}
+const tp=t=>{const m=String(t).split(/\s*[–—-]\s*/);return m.length===2&&m[0]&&m[1]?`<div class="tb">${esc(m[0])}</div><div class="te">${esc(m[1])}</div>`:`<div class="tb s">${esc(t)}</div>`};
+const MON=['ЯНВ','ФЕВ','МАР','АПР','МАЯ','ИЮН','ИЮЛ','АВГ','СЕН','ОКТ','НОЯ','ДЕК'];
+function cardSched(){
+ const rows=S.sched.rows.filter(r=>r.name||r.time).map((r,i,a)=>{const ok=/^\d{4}-\d\d-\d\d$/.test(r.date);
+  return `<div class="ss ${i===a.length-1?'hot':''}"><div class="dt"><b>${ok?r.date.slice(8):'--'}</b><i>${ok?MON[+r.date.slice(5,7)-1]:''}</i></div><div class="nm">${esc(r.name)}</div><div class="tr">${tp(r.time)}</div></div>`}).join('');
+ return shell('Расписание',`${IMG.track?`<div class="tp"><img src="${IMG.track}" alt=""></div>`:''}${rows}`,S.sched.note||'',{bg:IMG.bg})}
+const TABS={race:['Гонка',()=>cardRes('race')],sprint:['Спринт',()=>cardRes('sprint')],grid:['Решётка',cardGrid],sched:['Расписание',cardSched],drivers:['Личный зачёт',()=>cardStand('d')],teams:['Кубок',()=>cardStand('t')],base:['Пилоты и команды',()=>cardStand('d')]};
+function upd(){save();$('#card').innerHTML=TABS[S.tab][1]()}
+/* ---------- редакторы ---------- */
+const inp=(o,k,x={})=>h('input',{type:x.type||'text',value:o[k]??'',placeholder:x.ph||'',inputMode:x.num?'decimal':undefined,'aria-label':x.al||k,on:{[x.change?'change':'input']:e=>{o[k]=x.num?num(e.target.value.replace(',','.')):e.target.value;x.cb?x.cb(e.target.value):upd()}}});
+const sel=(opts,val,fn,al)=>{const s=h('select',{'aria-label':al},opts.map(([v,t])=>h('option',{value:v},t)));s.value=val;s.onchange=()=>fn(s.value);return s};
+const dOpts=()=>[['','— выбрать пилота —'],...[...S.drivers].sort((a,b)=>a.sur.localeCompare(b.sur)).map(d=>[d.id,`${d.sur} · ${d.team}`])];
+const btn=(t,f)=>h('button',{type:'button',on:{click:f}},t);
+const x_=f=>h('button',{type:'button','aria-label':'Удалить',on:{click:f}},'×');
+const fileRow=(label,k,max,type)=>h('label',{},label,h('div',{className:'bar'},h('input',{type:'file',accept:'image/*',on:{change:e=>{const f=e.target.files[0];if(f)loadImg(f,max,type,u=>{setImg(k,u);upd();render()})}}}),IMG[k]?btn('Убрать',()=>{setImg(k,'');upd();render()}):null));
+function eRes(E,k){
+ const c=CFG[k],sp=k==='sprint';
+ E.append(h('h2',{},`Результаты · топ-${c.n}`),h('p',{className:'hint'},'Выберите пилота на каждое место — команда и номер подставятся сами. Очки можно изменить.'));
+ S[k].forEach((r,i)=>E.append(h('div',{className:'r race'},h('span',{className:'n'},i+1),sel(dOpts(),r.d,v=>{r.d=v;upd()},'Пилот '+(i+1)),inp(r,'p',{num:1,al:'Очки '+(i+1)}))));
+ E.append(h('h2',{},'Фото подиума'),h('p',{className:'hint'},'Лучше PNG с прозрачным фоном: за гонщиком останется цвет его команды и номер. Фото живут, пока открыта страница.'));
+ [0,1,2].forEach(i=>E.append(fileRow(`${i+1} место`,'p'+k+i,700,'image/png')));
+ E.append(h('h2',{},'После '+(sp?'спринта':'гонки')),h('p',{className:'hint'},sp?'Очки спринта прибавятся к зачётам. «Лучший финиш» не меняется — в нём учитываются только гонки.':'Очки прибавятся к личному зачёту и Кубку, «лучший финиш» обновится.'),
+  h('div',{className:'bar'},btn('Прибавить очки в зачёты',()=>addRes(k)),S.undo?btn('Отменить начисление',undoRes):null))}
+function addRes(k){
+ if(!confirm('Прибавить очки к личному зачёту и Кубку?'))return;
+ S.undo={d:S.drivers.map(d=>[d.id,d.pts,d.best]),t:S.teams.map(t=>[t.n,t.pts,t.best])};
+ S[k].forEach((r,i)=>{const d=drv(r.d);if(!d)return;const p=Number(r.p)||0,t=S.teams.find(t=>t.n===d.team);
+  d.pts=(Number(d.pts)||0)+p;if(t)t.pts=(Number(t.pts)||0)+p;
+  if(k==='race'){d.best=Math.min(d.best||99,i+1);if(t)t.best=Math.min(t.best||99,i+1)}});
+ save();toast('Очки добавлены в зачёты');render()}
+function undoRes(){if(!S.undo)return;S.undo.d.forEach(([id,p,b])=>{const d=drv(id);if(d){d.pts=p;d.best=b}});S.undo.t.forEach(([n,p,b])=>{const t=S.teams.find(t=>t.n===n);if(t){t.pts=p;t.best=b}});S.undo=null;save();toast('Начисление отменено');render()}
+function eGrid(E){
+ E.append(h('h2',{},'Стартовая решётка'),h('p',{className:'hint'},'Место — число (1, 2, 3…) или PL1, PL2 для пит-лейна. Порядок строк не важен.'),
+  h('label',{},'Колонка с поулом',sel([['0','Справа'],['1','Слева']],S.poleLeft?'1':'0',v=>{S.poleLeft=v==='1';upd()},'Колонка поула')));
+ S.grid.forEach((g,i)=>E.append(h('div',{className:'r grid'},inp(g,'pos',{al:'Место'}),sel(dOpts(),g.d,v=>{g.d=v;upd()},'Пилот'),x_(()=>{S.grid.splice(i,1);upd();render()}))));
+ const nxt=re=>Math.max(0,...S.grid.filter(g=>re.test(g.pos)).map(g=>parseInt(String(g.pos).replace(/\D/g,''))||0))+1;
+ E.append(h('div',{className:'bar'},btn('+ Место',()=>{S.grid.push({pos:String(nxt(/^\d+$/)),d:''});upd();render()}),btn('+ Пит-лейн',()=>{S.grid.push({pos:'PL'+nxt(/pl/i),d:''});upd();render()})))}
+function eSched(E){
+ const s=S.sched;
+ E.append(h('h2',{},'Трасса и фон'),h('p',{className:'hint'},'Схема трассы — лучше PNG на прозрачном фоне. Картинки запоминаются в браузере.'),fileRow('Схема трассы','track',800,'image/png'),fileRow('Фон карточки (необязательно)','bg',900,'image/jpeg'),h('h2',{},'Сессии'));
+ s.rows.forEach((r,i)=>E.append(h('div',{className:'r sc'},inp(r,'date',{type:'date',al:'Дата'}),inp(r,'name',{ph:'Название',al:'Название'}),inp(r,'time',{ph:'11:30 – 12:30',al:'Время'}),x_(()=>{s.rows.splice(i,1);upd();render()}))));
+ const pre=n=>()=>{s.rows=n.map((name,i)=>({date:(s.rows[i]||{}).date||'',name,time:(s.rows[i]||{}).time||''}));upd();render()};
+ E.append(h('div',{className:'bar'},btn('+ Сессия',()=>{s.rows.push({date:'',name:'',time:''});upd();render()}),btn('Шаблон: спринт-уикенд',pre(['Практика','Спринт-квал','Спринт','Квалификация','Гонка'])),btn('Шаблон: обычный',pre(['Практика 1','Практика 2','Практика 3','Квалификация','Гонка']))),
+  h('label',{},'Подпись внизу',inp(s,'note',{al:'Подпись'})))}
+function eDrivers(E){
+ E.append(h('h2',{},'Личный зачёт'),h('p',{className:'hint'},'Меняйте очки — таблица сама отсортируется. При равенстве очков выше тот, у кого «лучший финиш» меньше.'),
+  h('div',{className:'r drv'},h('b',{className:'hint'},'Пилот'),h('b',{className:'hint'},'Очки'),h('b',{className:'hint'},'Лучш.')));
+ S.drivers.forEach(d=>E.append(h('div',{className:'r drv'},h('span',{className:'t'},`${d.sur} · ${d.team}`),inp(d,'pts',{num:1,al:'Очки '+d.sur}),inp(d,'best',{num:1,al:'Лучшее место '+d.sur}))))}
+function eTeams(E){
+ E.append(h('h2',{},'Кубок конструкторов'),h('div',{className:'r drv'},h('b',{className:'hint'},'Команда'),h('b',{className:'hint'},'Очки'),h('b',{className:'hint'},'Лучш.')));
+ S.teams.forEach(t=>E.append(h('div',{className:'r drv'},h('span',{className:'t'},t.n),inp(t,'pts',{num:1,al:'Очки '+t.n}),inp(t,'best',{num:1,al:'Лучшее место '+t.n}))));
+ E.append(h('div',{className:'bar'},btn('Пересчитать очки из личного зачёта',()=>{S.teams.forEach(t=>t.pts=S.drivers.filter(d=>d.team===t.n).reduce((a,d)=>a+(Number(d.pts)||0),0));upd();render();toast('Очки команд пересчитаны')})))}
+function eBase(E){
+ E.append(h('h2',{},'Команды'),h('p',{className:'hint'},'Название и цвет полоски. При переименовании команда обновится у пилотов.'));
+ S.teams.forEach((t,i)=>{let old=t.n;E.append(h('div',{className:'r tm'},inp(t,'n',{change:1,al:'Название',cb:()=>{S.drivers.forEach(d=>{if(d.team===old)d.team=t.n});old=t.n;upd()}}),h('input',{type:'color',value:t.c,'aria-label':'Цвет '+t.n,on:{input:e=>{t.c=e.target.value;upd()}}}),x_(()=>{if(S.drivers.some(d=>d.team===t.n))return toast('Сначала переназначьте пилотов этой команды');S.teams.splice(i,1);upd();render()})))});
+ E.append(btn('+ Команда',()=>{S.teams.push({n:'Новая команда',c:'#888888',pts:0,best:''});upd();render()}),h('h2',{},'Пилоты'),h('div',{className:'r base'},...['№','Фамилия','Ини.','Команда'].map(t=>h('b',{className:'hint'},t))));
+ S.drivers.forEach((d,i)=>E.append(h('div',{className:'r base'},inp(d,'no',{al:'Номер'}),inp(d,'sur',{change:1,al:'Фамилия',cb:()=>{const o=d.id;d.id=d.sur.toLowerCase();[...S.race,...S.sprint,...S.grid].forEach(r=>{if(r.d===o)r.d=d.id});upd()}}),inp(d,'ini',{al:'Инициал'}),sel(S.teams.map(t=>[t.n,t.n]),d.team,v=>{d.team=v;upd()},'Команда'),x_(()=>{if(!confirm('Удалить пилота '+d.sur+'?'))return;S.drivers.splice(i,1);[...S.race,...S.sprint,...S.grid].forEach(r=>{if(r.d===d.id)r.d=''});upd();render()}))));
+ E.append(btn('+ Пилот',()=>{S.drivers.push({id:'p'+Date.now(),ini:'X.',sur:'Фамилия',team:S.teams[0]?S.teams[0].n:'',no:'',pts:0,best:''});upd();render()}),h('h2',{},'Сброс'),btn('Вернуть исходные данные',()=>{if(confirm('Все введённые данные будут заменены исходными. Продолжить?')){S=DEF();save();render()}}))}
+const EDIT={race:E=>eRes(E,'race'),sprint:E=>eRes(E,'sprint'),grid:eGrid,sched:eSched,drivers:eDrivers,teams:eTeams,base:eBase};
+function render(){
+ const y=window.scrollY;
+ $('#tabs').replaceChildren(...Object.entries(TABS).map(([k,[t]],i)=>h('button',{role:'tab','aria-selected':String(k===S.tab),type:'button',on:{click:()=>{S.tab=k;save();render()}}},h('i',{},String(i+1).padStart(2,'0')),t)));
+ const E=$('#ed');E.replaceChildren(h('label',{},'Этап (попадёт в шапку картинки)',inp(S,'event',{al:'Этап'})));
+ EDIT[S.tab](E);upd();window.scrollTo(0,y)}
+/* ---------- генерация ---------- */
+let blob=null,timer;
+function toast(t){$('#toast').textContent=t;clearTimeout(timer);timer=setTimeout(()=>$('#toast').textContent='',5000)}
+$('#gen').onclick=async()=>{
+ const b=$('#gen');b.disabled=true;toast('Генерирую…');
+ try{
+  const el=$('#card').firstElementChild,w=el.classList.contains('w')?520:440;
+  const box=h('div',{style:'position:fixed;left:-9999px;top:0'}),c=el.cloneNode(true);c.style.width=w+'px';c.style.maxWidth='none';box.append(c);document.body.append(box);
+  await document.fonts.ready;
+  const cv=await html2canvas(c,{scale:3,backgroundColor:null,useCORS:true,logging:false});box.remove();
+  blob=await new Promise(r=>cv.toBlob(r,'image/png'));
+  $('#out').src=URL.createObjectURL(blob);$('#modal').classList.add('on');toast('');
+ }catch(e){toast('Не удалось сгенерировать. Попробуйте ещё раз.')}
+ b.disabled=false};
+$('#close').onclick=()=>$('#modal').classList.remove('on');
+$('#save').onclick=async()=>{
+ let dl=null;try{dl=await claude.use('downloads')}catch(e){}
+ const fn=`wall-of-champions-${S.tab}.png`;
+ if(!dl){const a=h('a',{href:URL.createObjectURL(blob),download:fn});document.body.append(a);a.click();a.remove();return}
+ try{await dl.save({filename:fn,data:blob});toast('Файл сохранён')}
+ catch(e){toast(e&&e.code==='declined'?'Сохранение отменено':'Не удалось сохранить файл')}};
+$('#hl').src=LOGO;
+render();
+</script>
+</body>
+</html>
